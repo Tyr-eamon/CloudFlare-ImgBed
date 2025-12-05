@@ -16,10 +16,10 @@ export async function userAuthCheck(env, url, request, requiredPermission = null
     if (tokenValidation.valid) {
         return true;
     }
-        
+
     // Token验证失败，继续尝试传统认证方式
     const securityConfig = await fetchSecurityConfig(env);
-    const rightAuthCode = securityConfig.auth.user.authCode;
+    const rightAuthCode = securityConfig.auth.user.authCode?.trim() || '';
 
     // 优先从请求 URL 参数获取 authCode
     let authCode = url.searchParams.get('authCode');
@@ -50,6 +50,8 @@ export async function userAuthCheck(env, url, request, requiredPermission = null
         }
     }
 
+    authCode = authCode?.trim() || '';
+
     if (isAuthCodeDefined(rightAuthCode) && !isValidAuthCode(rightAuthCode, authCode)) {
         return false;
     }
@@ -77,7 +79,7 @@ function isValidAuthCode(rightAuthCode, authCode) {
 }
 
 function isAuthCodeDefined(authCode) {
-    return authCode !== undefined && authCode !== null && authCode.trim() !== '';
+    return authCode !== undefined && authCode !== null && authCode !== '';
 }
 
 

@@ -58,11 +58,11 @@ export async function getSecurityConfig(db, env) {
     const kvAuth = settingsKV.auth || {}
     const auth = {
         user: {
-            authCode: kvAuth.user?.authCode || env.AUTH_CODE || '',
+            authCode: (kvAuth.user?.authCode || env.AUTH_CODE || '').toString().trim(),
         },
         admin: {
-            adminUsername: kvAuth.admin?.adminUsername || env.BASIC_USER || '',
-            adminPassword: kvAuth.admin?.adminPassword || env.BASIC_PASS || '',
+            adminUsername: (kvAuth.admin?.adminUsername || env.BASIC_USER || '').toString().trim(),
+            adminPassword: (kvAuth.admin?.adminPassword || env.BASIC_PASS || '').toString().trim(),
         }
     }
     settings.auth = auth

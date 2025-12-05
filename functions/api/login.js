@@ -12,11 +12,11 @@ export async function onRequestPost(context) {
     } = context;
     //从POST请求中获取authCode
     const jsonRequest = await request.json();
-    const authCode = jsonRequest.authCode;
+    const authCode = jsonRequest.authCode?.trim() || '';
 
     // 读取安全设置
     const securityConfig = await fetchSecurityConfig(env);
-    const rightAuthCode = securityConfig.auth.user.authCode;
+    const rightAuthCode = securityConfig.auth.user.authCode?.trim() || '';
 
     //验证authCode
     if (rightAuthCode !== undefined && rightAuthCode !== '' && authCode !== rightAuthCode) {
