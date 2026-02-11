@@ -102,8 +102,8 @@ function extractRequiredPermission(pathname) {
 async function authentication(context) {
   // 读取安全配置
   securityConfig = await fetchSecurityConfig(context.env);
-  basicUser = securityConfig.auth.admin.adminUsername
-  basicPass = securityConfig.auth.admin.adminPassword
+  basicUser = securityConfig.auth.admin.adminUsername?.trim() || '';
+  basicPass = securityConfig.auth.admin.adminPassword?.trim() || '';
 
   if(typeof basicUser == "undefined" || basicUser == null || basicUser == ""){
     // 无需身份验证
@@ -125,8 +125,10 @@ async function authentication(context) {
       }
       
       // 回退到使用传统身份认证方式
-      const { user, pass } = basicAuthentication(context.request);                         
-      if (basicUser !== user || basicPass !== pass) {
+      const { user, pass } = basicAuthentication(context.request);
+      const trimmedUser = user?.trim() || '';
+      const trimmedPass = pass?.trim() || '';
+      if (basicUser !== trimmedUser || basicPass !== trimmedPass) {
         return UnauthorizedException('Invalid credentials.');
       }else{
         return context.next();
